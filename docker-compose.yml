@@ -3,6 +3,8 @@ version: '3.1'
 services:
 
   # TODO: evaluate potential alternative at first sign of conflict with front-end assets
+
+  # storage switched to anonymous and/or docker volumes
   # mysql database
   db:
     image: mysql:5.7
@@ -15,8 +17,8 @@ services:
       MYSQL_PASSWORD: examplepass
       MYSQL_RANDOM_ROOT_PASSWORD: '1'
     volumes:
-      - ./data/db:/var/lib/mysql
-      # - db:/var/lib/mysql
+      # - ./data/db:/var/lib/mysql
+      - db:/var/lib/mysql
 
   # phpmyadmin web interface
   phpmyadmin:
@@ -29,23 +31,54 @@ services:
     environment:
       - PMA_ARBITRARY=1
 
-  # wordpress cms
-  wordpress:
-    image: wordpress:latest
+  # other data storage: redis, memcached, etc...
+
+
+
+  # # CMS/Front-End apps
+  # # wordpress cms
+  # wordpress:
+  #   image: wordpress:latest
+  #   restart: always
+  #   ports:
+  #     - 8080:80
+  #   depends_on:
+  #     - db
+  #   environment:
+  #     WORDPRESS_DB_HOST: db:3306
+  #     WORDPRESS_DB_USER: exampleuser
+  #     WORDPRESS_DB_PASSWORD: examplepass
+  #     WORDPRESS_DB_NAME: CMSDev
+  #   volumes:
+  #     - ./data/app/wordpress:/var/www/html
+  #     # - wordpress:/var/www/html
+
+
+  # # drupal
+  drupal:
+    image: drupal
     restart: always
     ports:
       - 8080:80
     depends_on:
       - db
-    environment:
-      WORDPRESS_DB_HOST: db:3306
-      WORDPRESS_DB_USER: exampleuser
-      WORDPRESS_DB_PASSWORD: examplepass
-      WORDPRESS_DB_NAME: CMSDev
     volumes:
-      - ./data/wordpress:/var/www/html
-      # - wordpress:/var/www/html
+      - drupal-modules:/var/www/html/modules
+      - drupal-profiles:/var/www/html/profiles
+      - drupal-themes:/var/www/html/themes
+      - drupal-sites:/var/www/html/sites
+      ## Use of the following mapped directories results in container errors on attempted install
+      # - ./data/app/drupal/modules:/var/www/html/modules:rwx
+      # - ./data/app/drupal/profiles:/var/www/html/profiles:rw
+      # - ./data/app/drupal/themes:/var/www/html/themes:rw
+      # - ./data/app/drupal/sites:/var/www/html/sites:rw
 
-# volumes:
+
+volumes:
+  drupal-modules:
+  drupal-profiles:
+  drupal-themes:
+  drupal-sites:
+  db:
+
 #   wordpress:
-#   db:

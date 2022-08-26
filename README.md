@@ -31,4 +31,15 @@ Container Notes and Documentation:
     PhpMyAdmin:
         https://hub.docker.com/_/phpmyadmin?tab=description
 
+
+    Drupal:
+        https://www.drupal.org/docs/security-in-drupal/securing-file-permissions-and-ownership
+        https://www.drupal.org/server-permissions
+        https://hub.docker.com/_/drupal
+
+Initial issue tracking:
+
+drupal mounting local storage results in permissions errors with drupal storage on /var/www/html -> /opt/drupal/web because directory requires ownership by www-data; issue isn't related solely to permissions, the contents may be overwritten by the hosts mounted directory
+
+Solution: using docker volumes to address necessary container storage
  -->

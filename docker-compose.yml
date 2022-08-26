@@ -4,32 +4,32 @@ services:
 
   # TODO: evaluate potential alternative at first sign of conflict with front-end assets
 
-  # # storage switched to anonymous and/or docker volumes
-  # # mysql database
-  # db:
-  #   image: mysql:5.7
-  #   restart: always
-  #   ports:
-  #     - 3306:3306
-  #   environment:
-  #     MYSQL_DATABASE: CMSDev
-  #     MYSQL_USER: exampleuser
-  #     MYSQL_PASSWORD: examplepass
-  #     MYSQL_RANDOM_ROOT_PASSWORD: '1'
-  #   volumes:
-  #     # - ./data/db:/var/lib/mysql
-  #     - db:/var/lib/mysql
-
-  # ugh, postgres too...
+  # storage switched to anonymous and/or docker volumes
+  # mysql database
   db:
-    environment:
-      POSTGRES_DB: CMSDev
-      POSTGRES_USER: exampleuser
-      POSTGRES_PASSWORD: examplepass
+    image: mysql:5.7
     restart: always
-    image: postgres
-    expose:
-      - "5432"
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_DATABASE: CMSDev
+      MYSQL_USER: exampleuser
+      MYSQL_PASSWORD: examplepass
+      MYSQL_RANDOM_ROOT_PASSWORD: '1'
+    volumes:
+      # - ./data/db:/var/lib/mysql
+      - db:/var/lib/mysql
+
+  # # ugh, postgres too...
+  # db:
+  #   environment:
+  #     POSTGRES_DB: CMSDev
+  #     POSTGRES_USER: exampleuser
+  #     POSTGRES_PASSWORD: examplepass
+  #   restart: always
+  #   image: postgres
+  #   expose:
+  #     - "5432"
 
   # phpmyadmin web interface
   phpmyadmin:
@@ -90,6 +90,25 @@ services:
   #     # - ./data/app/drupal/profiles:/var/www/html/profiles:rw
   #     # - ./data/app/drupal/themes:/var/www/html/themes:rw
   #     # - ./data/app/drupal/sites:/var/www/html/sites:rw
+
+
+  # # Csharp
+  # # ORCHARD
+  orchardapp:
+    image: orchardproject/orchardcore-cms-linux:latest
+    container_name: orchardcms
+    volumes:
+      - ./data/app/orchardstore:/app/App_Data
+    # links:
+    #   - db:db
+    #   - redis:redis
+    depends_on:
+      - db
+      - redis
+    ports:
+      - 5003:80
+
+
 
 
   # # # PYTHON - HOLD; a bit more involved setup, run, build process

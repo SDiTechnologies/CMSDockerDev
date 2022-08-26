@@ -25,7 +25,7 @@ Not entirely limited to just CMS type sites; include other non-developer set-ups
 
 
 
-Container Notes and Documentation:
+Notes and Documentation:
 
     Wordpress:
         https://hub.docker.com/_/wordpress/
@@ -39,6 +39,14 @@ Container Notes and Documentation:
         https://www.drupal.org/server-permissions
         https://hub.docker.com/_/drupal
 
+
+    Orchard:
+        https://docs.orchardcore.net/en/latest/
+        
+    Wagtail:
+        https://github.com/wagtail/bakerydemo
+
+    
 Initial issue tracking:
 
 drupal mounting local storage results in permissions errors with drupal storage on /var/www/html -> /opt/drupal/web because directory requires ownership by www-data; issue isn't related solely to permissions, the contents may be overwritten by the hosts mounted directory

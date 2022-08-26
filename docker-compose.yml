@@ -44,13 +44,13 @@ services:
 
   # other data storage: redis, memcached, etc...
 
-  redis:
-    restart: always
-    image: redis
-    ports:
-      - 6379:6379
-    # expose:
-    #   - "6379"
+  # redis:
+  #   restart: always
+  #   image: redis
+  #   ports:
+  #     - 6379:6379
+  #   # expose:
+  #   #   - "6379"
 
   # # CMS/Front-End apps
   # # PHP
@@ -92,23 +92,39 @@ services:
   #     # - ./data/app/drupal/sites:/var/www/html/sites:rw
 
 
-  # # Csharp
-  # # ORCHARD
-  orchardapp:
-    image: orchardproject/orchardcore-cms-linux:latest
-    container_name: orchardcms
-    volumes:
-      - ./data/app/orchardstore:/app/App_Data
-    # links:
-    #   - db:db
-    #   - redis:redis
+  # # # Csharp
+  # # # ORCHARD
+  # orchardapp:
+  #   image: orchardproject/orchardcore-cms-linux:latest
+  #   container_name: orchardcms
+  #   volumes:
+  #     - ./data/app/orchardstore:/app/App_Data
+  #   # links:
+  #   #   - db:db
+  #   #   - redis:redis
+  #   depends_on:
+  #     - db
+  #     - redis
+  #   ports:
+  #     - 5003:80
+
+  # # Javascript/Node
+  # # WikiJs
+  wiki:
+    image: ghcr.io/requarks/wiki:2   # they suggest using a specific major version; not :latest
+    container_name: wiki
+    restart: always
     depends_on:
       - db
-      - redis
     ports:
-      - 5003:80
-
-
+      - 80:3000
+    environment:
+      DB_TYPE: mysql
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_USER: exampleuser
+      DB_PASS: examplepass
+      DB_NAME: CMSDev
 
 
   # # # PYTHON - HOLD; a bit more involved setup, run, build process

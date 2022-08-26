@@ -43,6 +43,10 @@ Notes and Documentation:
     Orchard:
         https://docs.orchardcore.net/en/latest/
         
+    WikiJs:
+        https://docs.requarks.io/install/docker
+
+        
     Wagtail:
         https://github.com/wagtail/bakerydemo
 

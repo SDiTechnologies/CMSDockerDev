@@ -4,21 +4,32 @@ services:
 
   # TODO: evaluate potential alternative at first sign of conflict with front-end assets
 
-  # storage switched to anonymous and/or docker volumes
-  # mysql database
+  # # storage switched to anonymous and/or docker volumes
+  # # mysql database
+  # db:
+  #   image: mysql:5.7
+  #   restart: always
+  #   ports:
+  #     - 3306:3306
+  #   environment:
+  #     MYSQL_DATABASE: CMSDev
+  #     MYSQL_USER: exampleuser
+  #     MYSQL_PASSWORD: examplepass
+  #     MYSQL_RANDOM_ROOT_PASSWORD: '1'
+  #   volumes:
+  #     # - ./data/db:/var/lib/mysql
+  #     - db:/var/lib/mysql
+
+  # ugh, postgres too...
   db:
-    image: mysql:5.7
-    restart: always
-    ports:
-      - 3306:3306
     environment:
-      MYSQL_DATABASE: CMSDev
-      MYSQL_USER: exampleuser
-      MYSQL_PASSWORD: examplepass
-      MYSQL_RANDOM_ROOT_PASSWORD: '1'
-    volumes:
-      # - ./data/db:/var/lib/mysql
-      - db:/var/lib/mysql
+      POSTGRES_DB: CMSDev
+      POSTGRES_USER: exampleuser
+      POSTGRES_PASSWORD: examplepass
+    restart: always
+    image: postgres
+    expose:
+      - "5432"
 
   # phpmyadmin web interface
   phpmyadmin:
@@ -33,9 +44,16 @@ services:
 
   # other data storage: redis, memcached, etc...
 
-
+  redis:
+    restart: always
+    image: redis
+    ports:
+      - 6379:6379
+    # expose:
+    #   - "6379"
 
   # # CMS/Front-End apps
+  # # PHP
   # # wordpress cms
   # wordpress:
   #   image: wordpress:latest
@@ -54,31 +72,62 @@ services:
   #     # - wordpress:/var/www/html
 
 
-  # # drupal
-  drupal:
-    image: drupal
-    restart: always
-    ports:
-      - 8080:80
-    depends_on:
-      - db
-    volumes:
-      - drupal-modules:/var/www/html/modules
-      - drupal-profiles:/var/www/html/profiles
-      - drupal-themes:/var/www/html/themes
-      - drupal-sites:/var/www/html/sites
-      ## Use of the following mapped directories results in container errors on attempted install
-      # - ./data/app/drupal/modules:/var/www/html/modules:rwx
-      # - ./data/app/drupal/profiles:/var/www/html/profiles:rw
-      # - ./data/app/drupal/themes:/var/www/html/themes:rw
-      # - ./data/app/drupal/sites:/var/www/html/sites:rw
+  # # # drupal
+  # drupal:
+  #   image: drupal
+  #   restart: always
+  #   ports:
+  #     - 8080:80
+  #   depends_on:
+  #     - db
+  #   volumes:
+  #     - drupal-modules:/var/www/html/modules
+  #     - drupal-profiles:/var/www/html/profiles
+  #     - drupal-themes:/var/www/html/themes
+  #     - drupal-sites:/var/www/html/sites
+  #     ## Use of the following mapped directories results in container errors on attempted install
+  #     # - ./data/app/drupal/modules:/var/www/html/modules:rwx
+  #     # - ./data/app/drupal/profiles:/var/www/html/profiles:rw
+  #     # - ./data/app/drupal/themes:/var/www/html/themes:rw
+  #     # - ./data/app/drupal/sites:/var/www/html/sites:rw
+
+
+  # # # PYTHON - HOLD; a bit more involved setup, run, build process
+  # # # wagtail
+  # app:
+  #   environment:
+  #     DJANGO_SECRET_KEY: changeme
+  #     # DATABASE_URL: mysql://exampleuser:examplepass@db/CMSDev
+  #     DATABASE_URL: postgres://exampleuser:examplepass@db/CMSDev
+  #     CACHE_URL: redis://redis
+  #   build:
+  #     context: ./src/wagtailapp
+  #     dockerfile: Dockerfile
+  #   # volumes:
+  #   #   - wagtail-app:/app/demo/media
+  #   #   # - app-data:/source/bakerydemo/media
+  #   # # links:
+  #   # #   - db:db
+  #   # #   - redis:redis
+  #   ports:
+  #     - 8000:80
+  #   depends_on:
+  #     - db
+  #     - redis
 
 
 volumes:
-  drupal-modules:
-  drupal-profiles:
-  drupal-themes:
-  drupal-sites:
+  # database section
   db:
 
+  # # wagtail section
+  # wagtail-app:
+
+  # # drupal section
+  # drupal-modules:
+  # drupal-profiles:
+  # drupal-themes:
+  # drupal-sites:
+
+  # # wordpress section
 #   wordpress:
